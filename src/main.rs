@@ -1,20 +1,55 @@
+use clap::{Parser, ValueEnum};
 use colored::Colorize;
+
 #[derive(Debug, PartialEq)]
 struct Task {
     name: String,
     done: bool,
 }
 
+#[derive(Parser)]
+struct Cli {
+    /// What to do
+    #[arg(value_enum)]
+    mode: Option<Mode>,
+
+    names: Option<Vec<String>>,
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+enum Mode {
+    Add,
+    Remove,
+    Done,
+}
+
 fn main() {
     let mut tasks: Vec<Task> = vec![];
+    let cli = Cli::parse();
 
-    let t = Task::create("test".to_string());
-    println!("{:?}", &t);
-    add_task(&mut tasks, Task::create("TEst2".to_string()));
-    add_task(&mut tasks, Task::create("TEst2".to_string()));
-    println!("{:?}", t);
-    print_tl(&tasks);
-    tasks[0].mark_done();
+    match cli.mode {
+        Some(Mode::Add) => {
+            for name in cli.names.unwrap_or_default() {
+                add_task(&mut tasks, Task::create(name));
+            }
+        }
+        Some(Mode::Remove) => {
+            for name in cli.names.unwrap_or_default() {
+                if let Some(_) = tasks.iter().find(|x| x.name == name) {
+                    let index = tasks.iter().position(|x| x.name == name).unwrap();
+                    remove_task(&mut tasks, index)
+                }
+            }
+        }
+        Some(Mode::Done) => {
+            for name in cli.names.unwrap_or_default() {
+                if let Some(n) = tasks.iter_mut().find(|x| x.name == name) {
+                    n.mark_done();
+                }
+            }
+        }
+        None => print_tl(&tasks),
+    }
     print_tl(&tasks);
 }
 
