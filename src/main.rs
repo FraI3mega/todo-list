@@ -1,3 +1,4 @@
+use colored::Colorize;
 #[derive(Debug, PartialEq)]
 struct Task {
     name: String,
@@ -10,7 +11,10 @@ fn main() {
     let t = Task::create("test".to_string());
     println!("{:?}", &t);
     add_task(&mut tasks, Task::create("TEst2".to_string()));
+    add_task(&mut tasks, Task::create("TEst2".to_string()));
     println!("{:?}", t);
+    print_tl(&tasks);
+    tasks[0].mark_done();
     print_tl(&tasks);
 }
 
@@ -27,11 +31,19 @@ fn remove_task(mut list: &mut Vec<Task>, index: usize) {
 /// pretty prints the task list
 fn print_tl(list: &Vec<Task>) {
     for task in list {
-        println!(
-            "{}. {}",
-            list.iter().position(|x| &x == &task).unwrap() + 1,
-            task.name
-        )
+        if &task.done == &false {
+            println!(
+                "{}. {}",
+                list.iter().position(|x| &x == &task).unwrap() + 1,
+                &task.name.blue()
+            )
+        } else {
+            println!(
+                "{}. {}",
+                list.iter().position(|x| &x == &task).unwrap() + 1,
+                &task.name.as_str().bright_black().strikethrough()
+            )
+        }
     }
 }
 
