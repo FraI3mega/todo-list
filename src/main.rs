@@ -35,7 +35,7 @@ fn main() {
         }
         Some(Mode::Remove) => {
             for name in cli.names.unwrap_or_default() {
-                if let Some(_) = tasks.iter().find(|x| x.name == name) {
+                if tasks.iter().any(|x| x.name == name) {
                     let index = tasks.iter().position(|x| x.name == name).unwrap();
                     remove_task(&mut tasks, index)
                 }
@@ -54,12 +54,12 @@ fn main() {
 }
 
 /// add a to to the tasklist
-fn add_task(mut list: &mut Vec<Task>, task: Task) {
+fn add_task(list: &mut Vec<Task>, task: Task) {
     list.push(task);
 }
 
 /// Remove item from tasklist. Takes in an index starting at 0
-fn remove_task(mut list: &mut Vec<Task>, index: usize) {
+fn remove_task(list: &mut Vec<Task>, index: usize) {
     list.remove(index);
 }
 
