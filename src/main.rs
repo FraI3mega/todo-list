@@ -1,6 +1,8 @@
 mod tasks;
 
 use clap::{Parser, ValueEnum};
+use std::fs::File;
+use std::io::{BufWriter, Write};
 use tasks::{add_task, print_tl, remove_task, Task};
 
 #[derive(Parser)]
@@ -22,6 +24,14 @@ enum Mode {
 fn main() {
     let mut tasks: Vec<Task> = vec![];
     let cli = Cli::parse();
+    let file_r = match File::open("TaskList.json") {
+        Ok(f) => f,
+        Err(_) => {
+            File::create("TaskList.json").unwrap();
+            File::open("TaskList.json").unwrap()
+        }
+    };
+    let mut tasks = load_tl(file_r);
 
     match cli.mode {
         Some(Mode::Add) => {
@@ -46,5 +56,30 @@ fn main() {
         }
         None => print_tl(&tasks),
     }
-    print_tl(&tasks);
+
+    let mut file_w = match File::create("TaskList.json") {
+        Ok(f) => f,
+        Err(err) => {
+            eprintln!("Error: {}", err);
+            return;
+        }
+    };
+
+    save_tl(tasks, file_w);
+}
+
+fn load_tl(file: File) -> Vec<Task> {
+    serde_json::from_reader(file).unwrap()
+}
+
+fn save_tl(task_list: Vec<Task>, file: File) {
+    let mut writer = BufWriter::new(file);
+    match serde_json::to_writer(&mut writer, &task_list) {
+        Ok(_) => {}
+        Err(err) => eprintln!("Error: {}", err),
+    };
+    match writer.flush() {
+        Ok(_) => {}
+        Err(err) => eprintln!("Error: {}", err),
+    };
 }

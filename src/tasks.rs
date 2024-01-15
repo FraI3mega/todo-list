@@ -1,6 +1,7 @@
 use colored::Colorize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Task {
     pub(crate) name: String,
     pub(crate) done: bool,
