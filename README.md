@@ -3,4 +3,4 @@
 A simple todo-list cli program
 
 ## TODO
-- [] Fix empty json bug 
+- [ ] Fix empty json bug 
