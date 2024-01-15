@@ -22,7 +22,6 @@ enum Mode {
 }
 
 fn main() {
-    let mut tasks: Vec<Task> = vec![];
     let cli = Cli::parse();
     let file_r = match File::open("TaskList.json") {
         Ok(f) => f,
@@ -57,7 +56,7 @@ fn main() {
         None => print_tl(&tasks),
     }
 
-    let mut file_w = match File::create("TaskList.json") {
+    let file_w = match File::create("TaskList.json") {
         Ok(f) => f,
         Err(err) => {
             eprintln!("Error: {}", err);

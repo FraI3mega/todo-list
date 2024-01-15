@@ -20,16 +20,16 @@ pub(crate) fn remove_task(list: &mut Vec<Task>, index: usize) {
 /// pretty prints the task list
 pub(crate) fn print_tl(list: &Vec<Task>) {
     for task in list {
-        if &task.done == &false {
+        if !task.done {
             println!(
                 "{}. {}",
-                list.iter().position(|x| &x == &task).unwrap() + 1,
+                list.iter().position(|x| x == task).unwrap() + 1,
                 &task.name.blue()
             )
         } else {
             println!(
                 "{}. {}",
-                list.iter().position(|x| &x == &task).unwrap() + 1,
+                list.iter().position(|x| x == task).unwrap() + 1,
                 &task.name.as_str().bright_black().strikethrough()
             )
         }
