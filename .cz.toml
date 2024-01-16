@@ -3,4 +3,4 @@ name = "cz_conventional_commits"
 tag_format = "$version"
 version_scheme = "semver"
 version_provider = "cargo"
-# update_changelog_on_bump = true
+update_changelog_on_bump = true
