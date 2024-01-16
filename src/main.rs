@@ -1,7 +1,7 @@
 mod tasks;
 
 use clap::{Parser, ValueEnum};
-use std::fs::File;
+use std::fs::{self, File};
 use std::io::{BufWriter, Write};
 use tasks::{add_task, print_tl, remove_task, Task};
 
@@ -11,14 +11,20 @@ struct Cli {
     #[arg(value_enum)]
     mode: Option<Mode>,
 
+    /// Task name/s
     names: Option<Vec<String>>,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 enum Mode {
+    /// Add task/s
     Add,
+    /// Remove task/s
     Remove,
+    /// Mark task/s done
     Done,
+    /// Remove tasks marked done
+    RemoveDone,
 }
 
 fn main() {
@@ -53,8 +59,10 @@ fn main() {
                 }
             }
         }
-        None => print_tl(&tasks),
+        Some(Mode::RemoveDone) => tasks.retain(|x| !x.done),
+        None => {} //print_tl(&tasks)
     }
+    print_tl(&tasks);
 
     let file_w = match File::create("TaskList.json") {
         Ok(f) => f,
@@ -68,7 +76,11 @@ fn main() {
 }
 
 fn load_tl(file: File) -> Vec<Task> {
-    serde_json::from_reader(file).unwrap()
+    if fs::read_to_string("TaskList.json").unwrap_or_default() != "".to_string() {
+        serde_json::from_reader(file).unwrap()
+    } else {
+        vec![]
+    }
 }
 
 fn save_tl(task_list: Vec<Task>, file: File) {
