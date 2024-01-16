@@ -25,6 +25,8 @@ enum Mode {
     Done,
     /// Remove tasks marked done
     RemoveDone,
+    /// Clear the task list
+    Clear,
 }
 
 fn main() {
@@ -60,6 +62,7 @@ fn main() {
             }
         }
         Some(Mode::RemoveDone) => tasks.retain(|x| !x.done),
+        Some(Mode::Clear) => tasks = vec![],
         None => {} //print_tl(&tasks)
     }
     print_tl(&tasks);
