@@ -79,7 +79,7 @@ fn main() {
 }
 
 fn load_tl(file: File) -> Vec<Task> {
-    if fs::read_to_string("TaskList.json").unwrap_or_default() != "".to_string() {
+    if fs::read_to_string("TaskList.json").unwrap_or_default() != *"" {
         serde_json::from_reader(file).unwrap()
     } else {
         vec![]
