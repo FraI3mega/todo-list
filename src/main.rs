@@ -23,6 +23,8 @@ enum Mode {
     Remove,
     /// Mark task/s done
     Done,
+    /// Mark task/s undone
+    Undone,
     /// Remove tasks marked done
     RemoveDone,
     /// Clear the task list
@@ -69,6 +71,19 @@ fn main() {
                 } else {
                     if let Some(n) = tasks.iter_mut().find(|x| x.name == name) {
                         n.mark_done();
+                    }
+                }
+            }
+        }
+        Some(Mode::Undone) => {
+            for name in cli.names.unwrap_or_default() {
+                if name.parse::<usize>().is_ok()
+                    && name.parse::<usize>().unwrap_or_default() <= tasks.len()
+                {
+                    tasks[(name.parse::<usize>().unwrap()) - 1].mark_undone();
+                } else {
+                    if let Some(n) = tasks.iter_mut().find(|x| x.name == name) {
+                        n.mark_undone();
                     }
                 }
             }

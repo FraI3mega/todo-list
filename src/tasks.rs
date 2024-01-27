@@ -46,6 +46,11 @@ impl Task {
     pub fn mark_done(&mut self) {
         self.done = true;
     }
+
+    ///marks task undone
+    pub fn mark_undone(&mut self) {
+        self.done = false;
+    }
 }
 
 #[cfg(test)]
