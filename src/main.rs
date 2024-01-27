@@ -56,11 +56,9 @@ fn main() {
                     && name.parse::<usize>().unwrap_or_default() <= tasks.len()
                 {
                     remove_task(&mut tasks, (name.parse::<usize>().unwrap()) - 1)
-                } else {
-                    if tasks.iter().any(|x| x.name == name) {
-                        let index = tasks.iter().position(|x| x.name == name).unwrap();
-                        remove_task(&mut tasks, index)
-                    }
+                } else if tasks.iter().any(|x| x.name == name) {
+                    let index = tasks.iter().position(|x| x.name == name).unwrap();
+                    remove_task(&mut tasks, index)
                 }
             }
         }
@@ -70,10 +68,8 @@ fn main() {
                     && name.parse::<usize>().unwrap_or_default() <= tasks.len()
                 {
                     tasks[(name.parse::<usize>().unwrap()) - 1].mark_done();
-                } else {
-                    if let Some(n) = tasks.iter_mut().find(|x| x.name == name) {
-                        n.mark_done();
-                    }
+                } else if let Some(n) = tasks.iter_mut().find(|x| x.name == name) {
+                    n.mark_done();
                 }
             }
         }
@@ -83,10 +79,8 @@ fn main() {
                     && name.parse::<usize>().unwrap_or_default() <= tasks.len()
                 {
                     tasks[(name.parse::<usize>().unwrap()) - 1].mark_undone();
-                } else {
-                    if let Some(n) = tasks.iter_mut().find(|x| x.name == name) {
-                        n.mark_undone();
-                    }
+                } else if let Some(n) = tasks.iter_mut().find(|x| x.name == name) {
+                    n.mark_undone();
                 }
             }
         }
