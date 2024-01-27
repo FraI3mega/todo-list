@@ -3,4 +3,3 @@ name = "cz_gitmoji"
 tag_format = "$version"
 version_scheme = "semver"
 version_provider = "cargo"
-update_changelog_on_bump = true
