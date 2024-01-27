@@ -29,6 +29,8 @@ enum Mode {
     RemoveDone,
     /// Clear the task list
     Clear,
+    /// Export as markdown
+    Markdown,
 }
 
 fn main() {
@@ -90,6 +92,17 @@ fn main() {
         }
         Some(Mode::RemoveDone) => tasks.retain(|x| !x.done),
         Some(Mode::Clear) => tasks = vec![],
+        Some(Mode::Markdown) => {
+            tasks.iter().for_each(|x| {
+                if x.done {
+                    println!("- [x] {}", x.name)
+                } else {
+                    println!("- [ ] {}", x.name)
+                }
+            });
+            return;
+        }
+
         None => {} //print_tl(&tasks)
     }
     print_tl(&tasks);
