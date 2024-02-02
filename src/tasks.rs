@@ -18,7 +18,7 @@ pub(crate) fn remove_task(list: &mut Vec<Task>, index: usize) {
 }
 
 /// pretty prints the task list
-pub(crate) fn print_tl(list: &Vec<Task>) {
+pub(crate) fn print_tl(list: &[Task]) {
     list.iter().for_each(|task| {
         if !task.done {
             println!(
