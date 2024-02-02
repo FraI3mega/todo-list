@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 mod tasks;
 
 use clap::{Parser, ValueEnum};
