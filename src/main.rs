@@ -3,6 +3,7 @@
 mod tasks;
 
 use clap::{Parser, ValueEnum};
+use color_eyre::eyre::Result;
 use std::fs::{self, File};
 use std::io::{BufWriter, Write};
 use tasks::{add_task, print_tl, remove_task, Task};
@@ -35,7 +36,8 @@ enum Mode {
     Markdown,
 }
 
-fn main() {
+fn main() -> Result<()> {
+    color_eyre::install()?;
     let cli = Cli::parse();
     let file_r = match File::open("TaskList.json") {
         Ok(f) => f,
@@ -96,22 +98,18 @@ fn main() {
                     println!("- [ ] {}", x.name)
                 }
             });
-            return;
+            return Ok(());
         }
 
         None => {} //print_tl(&tasks)
     }
     print_tl(&tasks);
 
-    let file_w = match File::create("TaskList.json") {
-        Ok(f) => f,
-        Err(err) => {
-            eprintln!("Error: {}", err);
-            return;
-        }
-    };
+    let file_w = File::create("TaskList.json")?;
 
     save_tl(tasks, file_w);
+
+    Ok(())
 }
 
 fn load_tl(file: File) -> Vec<Task> {
