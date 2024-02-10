@@ -4,9 +4,12 @@ mod tasks;
 
 use clap::{Parser, ValueEnum};
 use color_eyre::eyre::Result;
+use regex::{Captures, Regex};
 use std::fs::{self, File};
 use std::io::{BufWriter, Write};
-use tasks::{add_task, print_tl, remove_task, Task};
+use tasks::{add_task, print_tl, remove_task, DueDate, Task};
+use time::macros::format_description;
+use time::{Duration, OffsetDateTime, UtcOffset};
 
 #[derive(Parser)]
 struct Cli {
@@ -16,6 +19,10 @@ struct Cli {
 
     /// Task name/s
     names: Option<Vec<String>>,
+
+    /// Due in time
+    #[arg(short, long, value_name = "TIME")]
+    time: Option<String>,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
@@ -51,7 +58,14 @@ fn main() -> Result<()> {
     match cli.mode {
         Some(Mode::Add) => {
             for name in cli.names.unwrap_or_default() {
-                add_task(&mut tasks, Task::create(name));
+                if cli.time.is_some() {
+                    add_task(
+                        &mut tasks,
+                        Task::create(name, Some(parse_due_date(cli.time.clone().unwrap())?)),
+                    )
+                } else {
+                    add_task(&mut tasks, Task::create(name, None))
+                }
             }
         }
         Some(Mode::Remove) => {
@@ -91,13 +105,7 @@ fn main() -> Result<()> {
         Some(Mode::RemoveDone) => tasks.retain(|x| !x.done),
         Some(Mode::Clear) => tasks = vec![],
         Some(Mode::Markdown) => {
-            tasks.iter().for_each(|x| {
-                if x.done {
-                    println!("- [x] {}", x.name)
-                } else {
-                    println!("- [ ] {}", x.name)
-                }
-            });
+            print_as_md(tasks);
             return Ok(());
         }
 
@@ -130,4 +138,49 @@ fn save_tl(task_list: Vec<Task>, file: File) {
         Ok(_) => {}
         Err(err) => eprintln!("Error: {}", err),
     };
+}
+
+fn parse_due_date(input: String) -> Result<OffsetDateTime> {
+    let re = Regex::new(r"^(?<amount>\d+)(?<unit>[m,h,d])$").unwrap();
+
+    let caps: Captures<'_> = match re.captures(&input) {
+        Some(cap) => cap,
+        None => panic!("Can't extract time from {input}"),
+    };
+
+    let due_date = match &caps["unit"] {
+        "m" => OffsetDateTime::now_utc() + Duration::minutes(caps["amount"].parse()?),
+        "h" => OffsetDateTime::now_utc() + Duration::hours(caps["amount"].parse()?),
+        "d" => OffsetDateTime::now_utc() + Duration::days(caps["amount"].parse()?),
+        &_ => panic!("Unit not found"),
+    };
+
+    Ok(due_date)
+}
+
+fn print_as_md(task_list: Vec<Task>) {
+    let format = format_description!("[year]-[month]-[day] [hour]:[minute]:[second]");
+    task_list.iter().for_each(|task| {
+        if task.due_date == DueDate::NoDueDate {
+            if task.done {
+                println!("- [x] {}", task.name)
+            } else {
+                println!("- [ ] {}", task.name)
+            }
+        } else {
+            let due_time = (if let DueDate::DueDate(n) = task.due_date {
+                n
+            } else {
+                unreachable!()
+            })
+            .to_offset(UtcOffset::current_local_offset().unwrap())
+            .format(format)
+            .unwrap();
+            if task.done {
+                println!("- [x] {}", task.name)
+            } else {
+                println!("- [ ] {} - Due on {}", task.name, due_time)
+            }
+        }
+    });
 }
