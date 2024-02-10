@@ -1,3 +1,22 @@
+## 1.2.0 (2024-02-10)
+
+### ✨ Features
+
+- add support for due dates
+- add better error presentation >>> ⏰ 20m
+
+### 🔒️ Security
+
+- **main.rs**: disallow unsafe code
+
+### 📝💡 Documentation
+
+- update changelog
+
+### 🚨 Linting
+
+- **main.rs**: change to use a list in printtl() >>> ⏰ 5m
+
 ## 1.1.0 (2024-01-27)
 
 ### ✨ Features
