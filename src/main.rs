@@ -105,7 +105,7 @@ fn main() -> Result<()> {
         Some(Mode::RemoveDone) => tasks.retain(|x| !x.done),
         Some(Mode::Clear) => tasks = vec![],
         Some(Mode::Markdown) => {
-            print_as_md(tasks);
+            print_as_markdown(tasks);
             return Ok(());
         }
 
@@ -158,7 +158,7 @@ fn parse_due_date(input: String) -> Result<OffsetDateTime> {
     Ok(due_date)
 }
 
-fn print_as_md(task_list: Vec<Task>) {
+fn print_as_markdown(task_list: Vec<Task>) {
     let format = format_description!("[year]-[month]-[day] [hour]:[minute]:[second]");
     task_list.iter().for_each(|task| {
         if task.due_date == DueDate::NoDueDate {
