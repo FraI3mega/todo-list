@@ -2,15 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.2.1] - 2024-06-05
+## [1.2.2] - 2024-06-15
 
 ### ⚙️ Miscellaneous Tasks
 
-- *(ci)* Add cargo-dist CI
+- _(ci)_ Add cargo-dist CI
 
 ### Build
 
-- *(gh-actions)* Add rust.yml workflow
+- _(gh-actions)_ Add rust.yml workflow
 
 ### Release
 
@@ -26,12 +26,12 @@ All notable changes to this project will be documented in this file.
 
 ### 📚 Documentation
 
-- *(cz)* Enable incremental changelog
+- _(cz)_ Enable incremental changelog
 - Clean README.md
 
 ### Build
 
-- *(deps)* Update dependencies
+- _(deps)_ Update dependencies
 
 ### Bump
 
@@ -49,21 +49,21 @@ All notable changes to this project will be documented in this file.
 
 ### 🚜 Refactor
 
-- *(lint)* Apply clippy lints
-- *(lint)* Apply clippy lints
-- *(lint)* Apply clippy lints
+- _(lint)_ Apply clippy lints
+- _(lint)_ Apply clippy lints
+- _(lint)_ Apply clippy lints
 
 ### 📚 Documentation
 
-- *(cz)* Add commitizen config
-- *(pack)* Bump package version in cargo.toml
+- _(cz)_ Add commitizen config
+- _(pack)_ Bump package version in cargo.toml
 - Bump cargo.toml
 - Add README.md
 - Fix README.md
 - Change version
 - Fix version
 - Mark EOF bug done in README.md
-- *(cz)* Temp remove incremental changelog
+- _(cz)_ Temp remove incremental changelog
 
 ### 🧪 Testing
 
@@ -71,7 +71,7 @@ All notable changes to this project will be documented in this file.
 
 ### Build
 
-- *(deps)* Add serde and serde_json
+- _(deps)_ Add serde and serde_json
 
 ### Bump
 
